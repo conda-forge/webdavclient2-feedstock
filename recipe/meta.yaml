@@ -8,20 +8,20 @@ package:
 
 source:
   fn: {{ name }}-{{ version }}.tar.gz
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: {{ sha256 }}
 
 build:
   noarch: python
-  number: 0
+  number: 1
   script: python setup.py install --single-version-externally-managed --record record.txt
 
 requirements:
-  build:
-    - python
+  host:
+    - python {{ python_min }}
     - setuptools
   run:
-    - python
+    - python >={{ python_min }}
     - requests
     - lxml
     - argcomplete
@@ -30,6 +30,8 @@ test:
   # commands:
     # script currently broken, issue https://github.com/appetito/webdav-client-python-2/issues/4
     # - wdc --help
+  requires:
+    - python {{ python_min }}
   imports:
     - webdav2
     - webdav2.client
