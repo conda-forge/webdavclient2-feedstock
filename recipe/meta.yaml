@@ -1,27 +1,26 @@
 {% set name = "webdavclient2" %}
 {% set version = "0.1.1" %}
-{% set sha256 = "797f121c4e381cb57d7f46abef513191da74959d70096e435269d9479a71ee7f" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tar.gz
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: {{ sha256 }}
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 797f121c4e381cb57d7f46abef513191da74959d70096e435269d9479a71ee7f
 
 build:
   noarch: python
-  number: 0
-  script: python setup.py install --single-version-externally-managed --record record.txt
+  number: 1
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
-  build:
-    - python
+  host:
+    - python {{ python_min }}
     - setuptools
+    - pip
   run:
-    - python
+    - python >={{ python_min }}
     - requests
     - lxml
     - argcomplete
@@ -30,6 +29,8 @@ test:
   # commands:
     # script currently broken, issue https://github.com/appetito/webdav-client-python-2/issues/4
     # - wdc --help
+  requires:
+    - python {{ python_min }}
   imports:
     - webdav2
     - webdav2.client
